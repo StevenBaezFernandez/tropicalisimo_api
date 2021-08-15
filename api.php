@@ -8,6 +8,7 @@
     require 'class.php';
 
     $prueba = new DB(
+        $_GET['controller'],
         $_SERVER['REQUEST_METHOD'],
         file_get_contents('php://input')
     );
