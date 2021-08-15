@@ -136,9 +136,25 @@
         // GET BLOCK---------------------------------------------------------------------------------------------------
 
         private function get_home_page(){
-            // get PRODUCTS TO HOME PAGE
-            $resul[] = 'get PRODUCTS TO HOME PAGE';
-            echo json_encode($resul);
+            $resul = $this -> Query("SELECT 
+            productos.id_prod, 
+            productos.nombre_prod, 
+            productos.descripcion_prod,
+            productos.precio_prod,
+            productos.cantidad_prod
+            FROM `home_page_productos` 
+            INNER JOIN productos 
+            ON productos.id_prod = home_page_productos.id_producto");
+            $data = [];
+            while($row = mysqli_fetch_array($resul)){
+                $producto['id_prod'] = $row['id_prod'];
+                $producto['nombre_prod'] = $row['nombre_prod'];
+                $producto['descripcion_prod'] = $row['descripcion_prod'];
+                $producto['precio_prod'] = $row['precio_prod'];
+                $producto['cantidad_prod'] = $row['cantidad_prod'];
+                array_push($data, $producto);
+            }
+            echo json_encode($data);
         }
         private function get_tienda(){
             // get PRODUCTS TO TIENDA
@@ -180,7 +196,7 @@
         }
 
         //DELETE BLOCK----------------------------------------------------------------------------------------------------
-        
+
         private function delete_home_page(){
             // delete PRODUCTS TO HOME PAGE
             $resul[] = 'delete PRODUCTS TO HOME PAGE';
