@@ -211,9 +211,14 @@
            echo json_encode($data);
         }
         private function get_galeria(){
-            //get IMG TO GALERIA
-            $resul[] = 'get PRODUCTS TO TIENDA';
-            echo json_encode($resul);
+            $resul = $this -> QUERY("SELECT * FROM galeria");
+            $data = [];
+            while($row = mysqli_fetch_array($resul)){
+                $img['id_img_gal'] = $row['id_img_gal'];
+                $img['url_img_gal'] = $row['url_img_gal'];
+                array_push($data, $img);
+            }
+            echo json_encode($data);
         }
         private function get_carrito(){
             //get PRODUCTS TO CART
