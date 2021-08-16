@@ -6,9 +6,12 @@
     header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 
     require 'class.php';
+    require 'exist.php';
 
     $prueba = new DB(
         $_GET['controller'],
+        $categoria,
+        $id,
         $_SERVER['REQUEST_METHOD'],
         file_get_contents('php://input')
     );

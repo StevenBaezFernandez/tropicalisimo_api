@@ -9,11 +9,21 @@
 
         //Overall data
         private $controller;
+        private $categoria;
+        private $id;
         private $method;
         private $data;
 
-        public function __construct($controller, $method, $data){
+        public function __construct(
+            $controller, 
+            $categoria = false, 
+            $id = false, 
+            $method, 
+            $data){
+
             $this -> controller = $controller;
+            $this -> categoria = $categoria;
+            $this -> id = $id;
             $this -> method = $method;
             $this -> $data = $data;
             parent:: __construct(
@@ -142,7 +152,7 @@
             productos.descripcion_prod,
             productos.precio_prod,
             productos.cantidad_prod
-            FROM `home_page_productos` 
+            FROM home_page_productos 
             INNER JOIN productos 
             ON productos.id_prod = home_page_productos.id_producto");
             $data = [];
@@ -157,9 +167,48 @@
             echo json_encode($data);
         }
         private function get_tienda(){
-            // get PRODUCTS TO TIENDA
-            $resul[] = 'get PRODUCTS TO TIENDA';
-            echo json_encode($resul);
+           if($this -> id){
+            $resul = $this -> Query("SELECT 
+            id_prod, 
+            nombre_prod, 
+            descripcion_prod, 
+            precio_prod, 
+            cantidad_prod 
+            FROM productos 
+            WHERE id_prod = '".$this -> id."'
+            ");
+           }elseif($this -> categoria){
+            $resul = $this -> Query("SELECT 
+            id_prod, 
+            nombre_prod, 
+            descripcion_prod, 
+            precio_prod, 
+            cantidad_prod 
+            FROM productos 
+            INNER JOIN categoria_productos 
+            ON productos.id_cat_prod = categoria_productos.id_cat 
+            WHERE categoria_productos.nombre_cat = '".$this -> categoria."'
+            ");
+           }else{
+            $resul = $this -> Query("SELECT 
+            id_prod, 
+            nombre_prod, 
+            descripcion_prod, 
+            precio_prod, 
+            cantidad_prod 
+            FROM productos
+            "); 
+           }
+           $data = [];
+           while($row = mysqli_fetch_array($resul)){
+               $producto['id_prod'] = $row['id_prod'];
+               $producto['nombre_prod'] = $row['nombre_prod'];
+               $producto['descripcion_prod'] = $row['descripcion_prod'];
+               $producto['precio_prod'] = $row['precio_prod'];
+               $producto['cantidad_prod'] = $row['cantidad_prod'];
+               array_push($data, $producto);
+           }
+           echo json_encode($data);
         }
         private function get_galeria(){
             //get IMG TO GALERIA
