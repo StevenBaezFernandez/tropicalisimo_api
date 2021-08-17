@@ -151,10 +151,13 @@
             productos.nombre_prod, 
             productos.descripcion_prod,
             productos.precio_prod,
-            productos.cantidad_prod
+            productos.cantidad_prod,
+            imagen_producto.url_img
             FROM home_page_productos 
             INNER JOIN productos 
-            ON productos.id_prod = home_page_productos.id_producto");
+            ON productos.id_prod = home_page_productos.id_producto
+            INNER JOIN imagen_producto
+            ON  imagen_producto.id_prod_img = productos.id_prod");
             $data = [];
             while($row = mysqli_fetch_array($resul)){
                 $producto['id_prod'] = $row['id_prod'];
@@ -162,6 +165,13 @@
                 $producto['descripcion_prod'] = $row['descripcion_prod'];
                 $producto['precio_prod'] = $row['precio_prod'];
                 $producto['cantidad_prod'] = $row['cantidad_prod'];
+                $resul_img_prod = $this -> Query("SELECT * FROM imagen_producto WHERE id_prod_img = '".$producto['id_prod']."'");
+                $img_prod = [];
+                while($row = mysqli_fetch_array($resul_img_prod)){
+                    $img['url_img'] = $row['url_img'];
+                    array_push($img_prod, $img);
+                }
+                $producto['imgs'] = $img_prod;
                 array_push($data, $producto);
             }
             echo json_encode($data);
@@ -206,7 +216,14 @@
                $producto['descripcion_prod'] = $row['descripcion_prod'];
                $producto['precio_prod'] = $row['precio_prod'];
                $producto['cantidad_prod'] = $row['cantidad_prod'];
-               array_push($data, $producto);
+               $resul_img_prod = $this -> Query("SELECT * FROM imagen_producto WHERE id_prod_img = '".$producto['id_prod']."'");
+               $img_prod = [];
+                while($row = mysqli_fetch_array($resul_img_prod)){
+                    $img['url_img'] = $row['url_img'];
+                    array_push($img_prod, $img);
+                }
+                $producto['imgs'] = $img_prod;
+                array_push($data, $producto);
            }
            echo json_encode($data);
         }
