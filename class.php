@@ -81,6 +81,9 @@
                 case 'carrito':
                     return $this -> get_carrito();
                 break;
+                case 'categoria':
+                    return $this -> get_categoria();
+                break;
 
             }
         }
@@ -115,6 +118,7 @@
                 case 'carrito':
                     return $this -> delete_carrito();
                 break;
+                
 
             }
         }
@@ -241,6 +245,16 @@
             //get PRODUCTS TO CART
             $resul[] = 'get PRODUCTS TO CART';
             echo json_encode($resul);
+        }
+        private function get_categoria(){
+            $resul = $this -> Query('SELECT * FROM categoria_productos');
+            $data = [];
+            while($row = mysqli_fetch_array($resul)){
+                $categoria['id_cat'] = $row['id_cat'];
+                $categoria['nombre_cat'] = $row['nombre_cat'];
+                array_push($data, $categoria);
+            }
+            echo json_encode($data);
         }
 
         //UPDATE BLOCK----------------------------------------------------------------------------------------------------
